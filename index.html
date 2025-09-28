@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Двоичная игра(соло)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0 user-scalable=no" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <style>
     :root {
       --rows: 7;
@@ -74,14 +74,13 @@
     .grid-header { flex: 0 0 calc(var(--row-size) * .66); display: flex; align-items: center; gap: var(--gap); background: #0a4f64; border: 1px solid #0f5b73; border-radius: 10px; padding: 0 var(--gap); color: #bfefff; font-weight: 800; }
     .power { flex: 1 1 0; display: flex; align-items: center; justify-content: center; height: 70%; background: #0b5c73; border: 1px solid #0f6b86; border-radius: 8px; }
 
-    /* Узкий, маленький '=' в заголовке, без рамок/фона и без фиксированной ширины */
     .eq-head {
       flex: 0 0 auto;
       display: flex; align-items: center; justify-content: center;
       height: 70%;
       background: transparent; border: none; border-radius: 0;
       padding: 0;
-      inline-size: 1.25ch; /* почти ширина одного символа */
+      inline-size: 1.25ch;
       color: #bfefff;
       font-weight: 900; font-size: 14px; line-height: 1;
     }
@@ -96,11 +95,8 @@
     @keyframes danger-flash { 0%, 100% { background-color: #0a4a5f; } 50% { background-color: var(--danger-bg); } }
     .tasks.danger { animation: danger-flash .6s linear infinite; box-shadow: 0 0 0 3px rgba(255,59,48,.25) inset; }
 
-    /* Высота строк пересчитывается от большей рабочей области (мы «сжали» хедер) */
-    .task { position: absolute; left: var(--gap); right: var(--gap); display: flex; align-items: center; gap: var(--gap); padding: 0 var(--gap); border-radius: 10px; border: 1px solid #0f5b73; background: #0a4a5f; color: #d6f2ff; transition: background .15s ease; height: calc((100% - (var(--rows) - 1) * var(--gap)) / (var(--rows))); }
-    .task { transition: background .15s ease, bottom .3s ease; }
+    .task { position: absolute; left: var(--gap); right: var(--gap); display: flex; align-items: center; gap: var(--gap); padding: 0 var(--gap); border-radius: 10px; border: 1px solid #0f5b73; background: #0a4a5f; color: #d6f2ff; transition: background .15s ease, bottom .3s ease; height: calc((100% - (var(--rows) - 1) * var(--gap)) / (var(--rows))); }
 
-    /* Биты — выше и с более тонкой рамкой, чтобы внутри было больше места */
     .bit {
       flex: 1 1 0;
       height: 92%;
@@ -115,8 +111,8 @@
     }
     .bit.on { background: var(--bit-on-bg); color: var(--bit-on-text); border-color: var(--bit-on-border); }
     .bit.locked { pointer-events: none; opacity: 1; }
+    .bit.pressed { transform: translateY(1px) scale(0.99); filter: brightness(0.97); } /* визуальный отклик */
 
-    /* Узкий '=' в строках: без фона, без рамок, минимальной ширины */
     .eq{
       flex: 0 0 auto;
       display: flex; align-items: center; justify-content: center;
@@ -129,7 +125,6 @@
       line-height: 1;
     }
 
-    /* Чуть ужимаем блок десятичного числа, чтобы ещё отдать ширину под биты */
     .target {
       flex: 0 0 10%;
       height: 90%;
@@ -140,7 +135,6 @@
     }
     .target.q { cursor: pointer; }
 
-    /* FX: «+N» */
     .score-fx { position: absolute; pointer-events: none; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,.15); opacity: 0; animation: score-pop .8s ease-out forwards; }
     .score-fx.points { color: var(--score); }
     @keyframes score-pop { 0% { transform: translateY(10px) scale(.92); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-28px) scale(1); opacity: 0; } }
@@ -167,7 +161,6 @@
     .overlay-card p  { margin: 0 0 14px; opacity:.9; font-size: 15px; }
     .overlay-card .btn-primary { background: var(--accent); color: #002433; border: none; border-radius: 10px; padding: 10px 18px; font-weight: 800; cursor: pointer; font-size: 16px; }
 
-    /* Numpad */
     .numpad { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: transparent; z-index: 1500; }
     .numpad.show { display:flex; }
     .pad { position: fixed; top: 0; left: 0; background:#0c4f63; border:1px solid #14728e; width:min(240px,92vw); border-radius:14px; box-shadow:0 10px 26px rgba(0,0,0,.35); padding:10px; }
@@ -180,7 +173,6 @@
     .pad-err { animation: padErr .15s ease-in-out 0s 2; }
     @keyframes padErr { from{transform:translateX(-3px)} to{transform:translateX(3px)} }
 
-    /* ===== Светлая тема (по настройке системы) ===== */
     @media (prefers-color-scheme: light) {
       :root {
         --bg: #F6F8FB;
@@ -236,14 +228,10 @@
       .pad-btn.back { background:#EFF3F8; }
     }
 
-    /* Мобильная версия: минимальные зазоры для максимальной ширины битов */
     @media (max-width: 899px) {
       .stage, .game, .grid-header, .tasks { padding-left: 0; padding-right: 0; }
-
       .task { left: 0; right: 0; gap: var(--gap); }
-
-      :root { --gap: 3px; } /* ~2–3px визуального зазора */
-
+      :root { --gap: 3px; }
       .bit {
         font-size: clamp(16px, 5.5vw, 32px);
         flex: 1 1 0;
@@ -290,7 +278,7 @@
     <aside class="hud">
       <div class="badge score">Очки: <span id="score">0</span></div>
       <div class="badge">Уровень: <span id="level">1</span></div>
-      <div class="badge">Строк: <span id="linesLeft">0/8</span></div>
+      <div class="badge">Строк: <span id="linesLeft">0/7</span></div>
       <button class="btn" id="restartBtn">Новая игра</button>
     </aside>
   </div>
@@ -303,7 +291,6 @@
     </div>
   </div>
 
-  <!-- Нумпад -->
   <div class="numpad" id="numpad" aria-hidden="true">
     <div class="pad">
       <div class="pad-display" id="padDisplay">&nbsp;</div>
@@ -332,13 +319,10 @@
 
     const POWERS=[128,64,32,16,8,4,2,1];
     const MAX_ROWS=7;
-    const HOLD_MS = 15; // регистрируем только удержание > 0 мс
-    
+    const HOLD_MS = 20; // регистрируем только удержание > 20 мс
 
-    /* ===== Настройки сложности ===== */
     const CONFIG={ level2AtScore:1200, level3AtScore:2800, level4AtScore:4800, level5AtScore:7200, pointsPerTask:100, reverseRowProb:0.30 };
 
-    /* ===== Пулы чисел по уровням (0 убран) ===== */
     const POOLS={
       L1:[1,2,3,4,7,8,15,16,17,31,32,34,51,63,64,68,85,102,119,127,128,136,160,176,192,204,224,240,248,252,254,255],
       L2:[5,6,9,10,12,18,20,24,33,36,40,48,56,65,66,72,80,88,96,104,112,120,129,130,132,144,152,153,168,170,184,191,200,208,216,221,223,232,239,247,251,253],
@@ -356,7 +340,6 @@
       {id:5,interval:4500,hints:false,name:'Уровень 5'}
     ];
 
-    /* ===== Элементы ===== */
     const tasksEl=document.getElementById('tasks');
     const headerEl=document.getElementById('header');
     const scoreEl=document.getElementById('score');
@@ -368,31 +351,33 @@
     let ovBtn=document.getElementById('ovBtn');
     const restartBtn=document.getElementById('restartBtn');
 
-    /* ===== Состояние ===== */
     let score=0; let currentLevel=1; let spawnTimer=null; let gameOver=false; let paused=true;
     let dangerActive=false; let dangerTimeout=null; let slots=new Array(MAX_ROWS).fill(false);
     let forceStandardCount=0;
+    let activeTargets = new Set();
 
-    /* ===== Вспомогательные ===== */
     function poolForLevel(level){ if(level===1)return POOLS.L1; if(level===2)return POOLS.L2; if(level===3)return POOLS.L3; if(level===4)return POOLS.L4; return POOLS.L5; }
     function randTarget(level){ const pool=poolForLevel(level); return pool[Math.floor(Math.random()*pool.length)] }
+    function randUniqueTarget(level) {
+      const pool = poolForLevel(level);
+      const free = pool.filter(n => !activeTargets.has(n));
+      // fallback к pool если вдруг всё занято
+      const base = free.length ? free : pool;
+      return base[Math.floor(Math.random() * base.length)];
+    }
     function rowValue(row){ const bits=[...row.querySelectorAll('.bit')]; return bits.reduce((s,b,i)=>s+(b.classList.contains('on')?POWERS[i]:0),0) }
     function setHud(){ scoreEl.textContent=String(score); levelEl.textContent=String(currentLevel); linesEl.textContent=`${tasksEl.childElementCount}/${MAX_ROWS}`; headerEl.classList.toggle('hints-hidden',!LEVELS[currentLevel-1].hints) }
     function clearSpawn(){ if(spawnTimer){ clearTimeout(spawnTimer); spawnTimer=null } }
     function scheduleSpawn(){ clearSpawn(); if(paused||gameOver||dangerActive)return; const interval=LEVELS[currentLevel-1].interval; spawnTimer=setTimeout(()=>{ addTask(); scheduleSpawn() },interval) }
-function burstSpawnOnClear() {
-  if (paused || gameOver || dangerActive) return;
 
-  // было: if (tasksEl.childElementCount !== 0) return;
-  const hasTasks = !!tasksEl.querySelector('.task');
-  if (hasTasks) return;
-
-  const n = 1 + Math.floor(Math.random() * 3);
-  for (let i = 0; i < n; i++) {
-    addTask();
-  }
-  scheduleSpawn();
-}
+    function burstSpawnOnClear() {
+      if (paused || gameOver || dangerActive) return;
+      const hasTasks = !!tasksEl.querySelector('.task');
+      if (hasTasks) return;
+      const n = 1 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < n; i++) addTask();
+      scheduleSpawn();
+    }
 
     function resetDanger(){ dangerActive=false; tasksEl.classList.remove('danger'); if(dangerTimeout){ clearTimeout(dangerTimeout); dangerTimeout=null } scheduleSpawn(); setHud() }
     function enterDanger(){ if(dangerActive||gameOver)return; dangerActive=true; clearSpawn(); tasksEl.classList.add('danger'); dangerTimeout=setTimeout(()=>{ if(dangerActive) endGame() },5000) }
@@ -402,7 +387,6 @@ function burstSpawnOnClear() {
     function firstFreeSlot(){ return slots.indexOf(false) }
     function awardPoints(amount,anchorEl){ score+=amount; setHud(); const badge=scoreEl.closest('.badge'); if(badge){ badge.classList.add('flash'); setTimeout(()=>badge.classList.remove('flash'),300) } if(anchorEl){ const r1=anchorEl.getBoundingClientRect(); const r2=tasksEl.getBoundingClientRect(); const x=r1.left+r1.width/2-r2.left+(Math.random()*20-10); const y=r1.top+r1.height/2-r2.top+(Math.random()*10-5); const fx=document.createElement('div'); fx.className='score-fx points'; fx.textContent=`+${amount}`; fx.style.left=`${x}px`; fx.style.top=`${y}px`; tasksEl.appendChild(fx); fx.addEventListener('animationend',()=>fx.remove()) } }
 
-    /* === Гравитация: сдвиг строк вниз после удаления нижнего соседа === */
     function compactFromSlot(removedSlot){
       const rows=[...tasksEl.querySelectorAll('.task')];
       for(const r of rows){
@@ -417,7 +401,6 @@ function burstSpawnOnClear() {
       slots[MAX_ROWS-1]=false;
     }
 
-    /* ===== NUMPAD ===== */
     const numpad=document.getElementById('numpad');
     const padDisplay=document.getElementById('padDisplay');
     const padEl=numpad.querySelector('.pad');
@@ -463,46 +446,35 @@ function burstSpawnOnClear() {
     window.addEventListener('orientationchange',()=>positionPad(padAnchorEl));
     window.addEventListener('scroll',()=>positionPad(padAnchorEl),true);
 
-    /* ===== Создание строки ===== */
     function addTask(options={}){
       if(gameOver||paused||dangerActive) return;
       const slot=firstFreeSlot(); if(slot===-1){ enterDanger(); } else {
         let isReverse = (typeof options.type==='string') ? (options.type==='reverse') : (Math.random()<CONFIG.reverseRowProb);
         if(forceStandardCount>0){ isReverse=false; forceStandardCount--; }
-        const num=randTarget(currentLevel);
+        const num = randUniqueTarget(currentLevel);
         const row=document.createElement('div'); row.className='task'; row.dataset.slot=String(slot); row.dataset.type=isReverse?'reverse':'standard';
         for(let i=0;i<8;i++){
           const bit=document.createElement('div'); bit.className='bit'; bit.textContent='0';
           if(isReverse){ if(num & POWERS[i]){ bit.classList.add('on'); bit.textContent='1' } bit.classList.add('locked') }
           else {
-            // регистрируем только удержание > HOLD_MS
-let downAt = 0;
-let held = false;
-
-bit.addEventListener('pointerdown', (e) => {
-  if (gameOver || paused) return;
-  downAt = performance.now();
-  held = false;
-  bit.classList.add('pressed'); // визуальный отклик (необязательно)
-});
-
-bit.addEventListener('pointerup', (e) => {
-  bit.classList.remove('pressed');
-  if (gameOver || paused) return;
-
-  const dt = performance.now() - downAt;
-  if (dt >= HOLD_MS) {
-    held = true;
-    bit.classList.toggle('on');
-    bit.textContent = bit.classList.contains('on') ? '1' : '0';
-    if (rowValue(row) === num) resolveRow(row, num);
-  }
-});
-
-// если палец/курсор ушёл — не засчитываем
-bit.addEventListener('pointercancel', () => bit.classList.remove('pressed'));
-bit.addEventListener('pointerleave',  () => bit.classList.remove('pressed'));
-
+            let downAt = 0;
+            bit.addEventListener('pointerdown', (e) => {
+              if (gameOver || paused) return;
+              downAt = performance.now();
+              bit.classList.add('pressed');
+            });
+            bit.addEventListener('pointerup', (e) => {
+              bit.classList.remove('pressed');
+              if (gameOver || paused) return;
+              const dt = performance.now() - downAt;
+              if (dt >= HOLD_MS) {
+                bit.classList.toggle('on');
+                bit.textContent = bit.classList.contains('on') ? '1' : '0';
+                if (rowValue(row) === num) resolveRow(row, num);
+              }
+            });
+            bit.addEventListener('pointercancel', () => bit.classList.remove('pressed'));
+            bit.addEventListener('pointerleave',  () => bit.classList.remove('pressed'));
           }
           row.appendChild(bit)
         }
@@ -515,13 +487,14 @@ bit.addEventListener('pointerleave',  () => bit.classList.remove('pressed'));
           })
         }
         tasksEl.appendChild(row);
-        // === Усложнение: для стандартных строк заранее включаем 0..3 неверных битов ===
+
+        row.dataset.target = String(num);
+        activeTargets.add(num);
+
         if (!isReverse) {
           const bitsEls = [...row.querySelectorAll('.bit')];
           const zeroIdx = [];
-          for (let i = 0; i < 8; i++) {
-            if ((num & POWERS[i]) === 0) zeroIdx.push(i);
-          }
+          for (let i = 0; i < 8; i++) if ((num & POWERS[i]) === 0) zeroIdx.push(i);
           let k = Math.floor(Math.random() * 4); // 0..3
           if (k > zeroIdx.length) k = zeroIdx.length;
           for (let t = 0; t < k; t++) {
@@ -537,47 +510,44 @@ bit.addEventListener('pointerleave',  () => bit.classList.remove('pressed'));
     }
 
     function resolveRow(row,num){
-  row.style.background='var(--success)';
-  setTimeout(()=>{
-    const s=parseInt(row.dataset.slot,10);
-    const anchor=row.querySelector('.target')||row;
-    row.remove();
-    slots[s]=false;
-    compactFromSlot(s);
+      row.style.background='var(--success)';
+      setTimeout(()=>{
+        const s=parseInt(row.dataset.slot,10);
+        const anchor=row.querySelector('.target')||row;
+        const targetNum = Number(row.dataset.target);
+        if (!Number.isNaN(targetNum)) activeTargets.delete(targetNum);
+        row.remove();
+        slots[s]=false;
+        compactFromSlot(s);
+        if(dangerActive && tasksEl.childElementCount<MAX_ROWS) resetDanger();
+        setHud();
+        awardPoints(CONFIG.pointsPerTask, anchor);
+        tryLevelUp();
+        burstSpawnOnClear();
+      },120);
+    }
 
-    if(dangerActive && tasksEl.childElementCount<MAX_ROWS) resetDanger();
+    function clearField(){
+      tasksEl.innerHTML='';
+      slots=new Array(MAX_ROWS).fill(false);
+      setHud();
+      activeTargets.clear();
+    }
 
-    setHud();
-    awardPoints(CONFIG.pointsPerTask, anchor);
-
-    // Возможно апгрейд уровня (ставит паузу и чистит поле)
-    tryLevelUp();
-
-    // <<< ДОБАВЬ ЭТО: если после закрытия строки поле пустое и не пауза — сделать «рывок»
-    burstSpawnOnClear();
-  },120);
-}
-
-
-    function clearField(){ tasksEl.innerHTML=''; slots=new Array(MAX_ROWS).fill(false); setHud() }
-    function showOverlay({title,text,btnText,onConfirm}){ ovTitle.textContent=title; ovText.textContent=text; ovBtn.textContent=btnText; overlay.classList.add('show'); const newBtn=ovBtn.cloneNode(true); ovBtn.parentNode.replaceChild(newBtn,ovBtn); ovBtn=newBtn; ovBtn.addEventListener('click',()=>{ overlay.classList.remove('show'); if(typeof onConfirm==='function') onConfirm() }) }
+    function showOverlay({title,text,btnText,onConfirm}){
+      ovTitle.textContent=title; ovText.textContent=text; ovBtn.textContent=btnText; overlay.classList.add('show');
+      const newBtn=ovBtn.cloneNode(true); ovBtn.parentNode.replaceChild(newBtn,ovBtn); ovBtn=newBtn;
+      ovBtn.addEventListener('click',()=>{ overlay.classList.remove('show'); if(typeof onConfirm==='function') onConfirm() })
+    }
     function endGame(){ gameOver=true; clearSpawn(); resetDanger(); showOverlay({ title:'Игра окончена', text:`Игровое поле переполнено. Очки: ${score}`, btnText:'Играть снова', onConfirm:()=>{ newGame() } }) }
-
     function levelOverlay(){ const L=LEVELS[currentLevel-1]; showOverlay({ title:L.name, text: currentLevel>=3? 'Подсказки скрыты. Продолжайте!' : 'Становится быстрее. Готовы?', btnText:'Продолжить', onConfirm:()=>{ paused=false; forceStandardCount=2; addTask({type:'standard'}); addTask({type:'standard'}); scheduleSpawn() } }) }
-
     function tryLevelUp(){ const prev=currentLevel; if(score>=CONFIG.level5AtScore) currentLevel=5; else if(score>=CONFIG.level4AtScore) currentLevel=4; else if(score>=CONFIG.level3AtScore) currentLevel=3; else if(score>=CONFIG.level2AtScore) currentLevel=2; else currentLevel=1; if(currentLevel!==prev){ paused=true; clearSpawn(); resetDanger(); clearField(); setHud(); levelOverlay() } }
-
     function newGame(){ gameOver=false; paused=false; resetDanger(); score=0; currentLevel=1; forceStandardCount=2; clearField(); setHud(); addTask({type:'standard'}); addTask({type:'standard'}); scheduleSpawn() }
-
     restartBtn.addEventListener('click',()=>{ paused=true; clearSpawn(); resetDanger(); showOverlay({ title:'Новая игра', text:'Начать заново?', btnText:'Старт', onConfirm:()=>{ newGame() } }) })
-
     showOverlay({ title:'Добро пожаловать', text:'Нажмите «Старт» для начала игры.', btnText:'Старт', onConfirm:()=>{ newGame() } })
-
     setHud();
-
     window.addEventListener('resize',()=>{ [...tasksEl.querySelectorAll('.task')].forEach(row=>{ placeRow(row,parseInt(row.dataset.slot,10)) }); positionPad(padAnchorEl) });
 
-    /* Оверлей ориентации */
     const rotateOverlay=document.createElement('div'); rotateOverlay.style.cssText='position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);color:#fff;display:none;align-items:center;justify-content:center;text-align:center;font-size:20px;font-weight:900;padding:24px;'; rotateOverlay.textContent='Поверните телефон вертикально'; document.body.appendChild(rotateOverlay);
     const MIN_ROW_H=40; function hasEnoughSpace(){ const g=getGapPx(); const available=tasksEl.clientHeight; const rowH=(available-((MAX_ROWS-1)*g))/MAX_ROWS; return rowH>=MIN_ROW_H }
     function checkOrientationAndSpace(){ const isLandscape=window.matchMedia('(orientation: landscape)').matches; rotateOverlay.style.display=(isLandscape && !hasEnoughSpace())?'flex':'none' }
